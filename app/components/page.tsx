@@ -94,7 +94,21 @@ import { EnvironmentVariables, EnvironmentVariablesHeader, EnvironmentVariablesT
 import { WebPreview, WebPreviewNavigation, WebPreviewNavigationButton, WebPreviewUrl, WebPreviewBody, WebPreviewConsole } from "@/components/ai-elements/web-preview";
 import { Sandbox, SandboxHeader, SandboxContent, SandboxTabs, SandboxTabsBar, SandboxTabsList, SandboxTabsTrigger, SandboxTabContent } from "@/components/ai-elements/sandbox";
 import { StackTrace, StackTraceHeader, StackTraceError, StackTraceErrorType, StackTraceErrorMessage, StackTraceFrames } from "@/components/ai-elements/stack-trace";
-import { CopyIcon, ThumbsUpIcon, ThumbsDownIcon, RefreshCwIcon, SearchIcon, GlobeIcon, CheckIcon, DownloadIcon, ExternalLinkIcon, ArrowLeftIcon, ArrowRightIcon, RotateCwIcon } from "lucide-react";
+import { ImageZoom } from "@/components/kibo-ui/image-zoom";
+import { EditorProvider, EditorBubbleMenu, EditorFormatBold, EditorFormatItalic, EditorFormatStrike, EditorFormatUnderline } from "@/components/kibo-ui/editor";
+import { ColorPicker, ColorPickerSelection, ColorPickerHue, ColorPickerAlpha, ColorPickerFormat, ColorPickerOutput, ColorPickerEyeDropper } from "@/components/kibo-ui/color-picker";
+import { ImageCrop, ImageCropContent, ImageCropApply, ImageCropReset } from "@/components/kibo-ui/image-crop";
+import { KanbanProvider, KanbanBoard, KanbanHeader, KanbanCards, KanbanCard } from "@/components/kibo-ui/kanban";
+import { GanttProvider, GanttSidebar, GanttSidebarGroup, GanttSidebarItem, GanttFeatureList, GanttFeatureListGroup, GanttFeatureItem, GanttTimeline, GanttHeader, GanttToday, type GanttFeature } from "@/components/kibo-ui/gantt";
+import { Marquee, MarqueeContent, MarqueeFade, MarqueeItem } from "@/components/kibo-ui/marquee";
+import { QRCode } from "@/components/kibo-ui/qr-code";
+import { Source as PromptKitSource, SourceTrigger as PromptKitSourceTrigger, SourceContent as PromptKitSourceContent } from "@/components/ui/source";
+// ElevenLabs Voice Components (rant-voice)
+import { LiveWaveform } from "@/components/ui/live-waveform";
+import { VoiceButton } from "@/components/ui/voice-button";
+import { MicSelector } from "@/components/ui/mic-selector";
+import { Orb } from "@/components/ui/orb";
+import { CopyIcon, ThumbsUpIcon, ThumbsDownIcon, RefreshCwIcon, SearchIcon, GlobeIcon, CheckIcon, DownloadIcon, ExternalLinkIcon, ArrowLeftIcon, ArrowRightIcon, RotateCwIcon, MicIcon } from "lucide-react";
 
 // Categories
 const categories = [
@@ -107,6 +121,7 @@ const categories = [
     { id: "overlay", name: "Overlay" },
     { id: "navigation", name: "Navigation" },
     { id: "layout", name: "Layout" },
+    { id: "rant-voice", name: "Rant Voice" },
 ];
 
 // Component sections
@@ -139,6 +154,20 @@ const componentSections = [
     { id: "ai-web-preview", name: "Web Preview", category: "ai-elements" },
     { id: "ai-sandbox", name: "Sandbox", category: "ai-elements" },
     { id: "ai-stack-trace", name: "Stack Trace", category: "ai-elements" },
+    { id: "ai-image-zoom", name: "Image Zoom", category: "ai-elements" },
+    { id: "ai-editor", name: "Editor", category: "ai-elements" },
+    { id: "ai-color-picker", name: "Color Picker", category: "ai-elements" },
+    { id: "ai-image-crop", name: "Image Crop", category: "ai-elements" },
+    { id: "ai-kanban", name: "Kanban", category: "ai-elements" },
+    { id: "ai-gantt", name: "Gantt", category: "ai-elements" },
+    { id: "ai-marquee", name: "Marquee", category: "ai-elements" },
+    { id: "ai-qr-code", name: "QR Code", category: "ai-elements" },
+    { id: "ai-source", name: "Source", category: "ai-elements" },
+    // Rant Voice Components
+    { id: "voice-live-waveform", name: "Live Waveform", category: "rant-voice" },
+    { id: "voice-voice-button", name: "Voice Button", category: "rant-voice" },
+    { id: "voice-mic-selector", name: "Mic Selector", category: "rant-voice" },
+    { id: "voice-orb", name: "Orb", category: "rant-voice" },
     // UI Components
     { id: "accordion", name: "Accordion", category: "layout" },
     { id: "alert", name: "Alert", category: "feedback" },
@@ -182,6 +211,126 @@ function ComponentCard({ title, children, id }: { title: string; children: React
             </CardHeader>
             <CardContent>{children}</CardContent>
         </Card>
+    );
+}
+
+// Helper component for ImageCrop demo
+function ImageCropDemo() {
+    const [file, setFile] = React.useState<File | null>(null);
+    const [croppedImage, setCroppedImage] = React.useState<string | null>(null);
+
+    return (
+        <div className="space-y-4">
+            <Input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) {
+                        setFile(f);
+                        setCroppedImage(null);
+                    }
+                }}
+            />
+            {file && (
+                <div className="space-y-2">
+                    <ImageCrop file={file} onCrop={setCroppedImage} aspect={16 / 9}>
+                        <ImageCropContent className="max-h-[300px]" />
+                        <div className="flex gap-2 mt-2">
+                            <ImageCropApply />
+                            <ImageCropReset />
+                        </div>
+                    </ImageCrop>
+                </div>
+            )}
+            {croppedImage && (
+                <div className="space-y-2">
+                    <p className="text-sm font-medium">Cropped Result:</p>
+                    <img src={croppedImage} alt="Cropped" className="max-w-xs rounded-lg border" />
+                </div>
+            )}
+        </div>
+    );
+}
+
+// Helper component for Kanban demo
+const kanbanColumns = [
+    { id: "todo", name: "To Do" },
+    { id: "in-progress", name: "In Progress" },
+    { id: "done", name: "Done" },
+];
+
+const initialKanbanData = [
+    { id: "1", name: "Research competitors", column: "todo" },
+    { id: "2", name: "Design mockups", column: "todo" },
+    { id: "3", name: "Implement UI", column: "in-progress" },
+    { id: "4", name: "Write tests", column: "done" },
+];
+
+function KanbanDemo() {
+    const [data, setData] = React.useState(initialKanbanData);
+
+    return (
+        <KanbanProvider
+            columns={kanbanColumns}
+            data={data}
+            onDataChange={setData}
+            className="min-h-[250px]"
+        >
+            {(column) => (
+                <KanbanBoard key={column.id} id={column.id}>
+                    <KanbanHeader>{column.name}</KanbanHeader>
+                    <KanbanCards id={column.id}>
+                        {(item) => (
+                            <KanbanCard key={item.id} id={item.id} name={item.name} column={item.column} />
+                        )}
+                    </KanbanCards>
+                </KanbanBoard>
+            )}
+        </KanbanProvider>
+    );
+}
+
+// Helper data and component for Gantt demo
+const ganttStatuses = [
+    { id: "planned", name: "Planned", color: "#6366f1" },
+    { id: "in-progress", name: "In Progress", color: "#f59e0b" },
+    { id: "completed", name: "Completed", color: "#10b981" },
+];
+
+const today = new Date();
+const initialGanttFeatures: GanttFeature[] = [
+    { id: "1", name: "Research Phase", startAt: new Date(today.getFullYear(), today.getMonth(), 1), endAt: new Date(today.getFullYear(), today.getMonth(), 10), status: ganttStatuses[2] },
+    { id: "2", name: "Design Phase", startAt: new Date(today.getFullYear(), today.getMonth(), 8), endAt: new Date(today.getFullYear(), today.getMonth(), 20), status: ganttStatuses[1] },
+    { id: "3", name: "Development", startAt: new Date(today.getFullYear(), today.getMonth(), 15), endAt: new Date(today.getFullYear(), today.getMonth() + 1, 5), status: ganttStatuses[0] },
+];
+
+function GanttDemo() {
+    const [features, setFeatures] = React.useState(initialGanttFeatures);
+
+    return (
+        <div className="h-[350px] w-full overflow-hidden rounded-lg border">
+            <GanttProvider range="monthly" zoom={100}>
+                <GanttSidebar>
+                    <GanttSidebarGroup name="Project Tasks">
+                        {features.map((feature) => (
+                            <GanttSidebarItem key={feature.id} feature={feature} />
+                        ))}
+                    </GanttSidebarGroup>
+                </GanttSidebar>
+                <GanttTimeline>
+                    <GanttHeader />
+                    <GanttFeatureList>
+                        <GanttFeatureListGroup>
+                            {features.map((feature) => (
+                                <GanttFeatureItem key={feature.id} {...feature} />
+                            ))}
+                        </GanttFeatureListGroup>
+                    </GanttFeatureList>
+                    <GanttToday />
+                </GanttTimeline>
+            </GanttProvider>
+        </div>
     );
 }
 
@@ -734,6 +883,222 @@ at mountIndeterminateComponent (node_modules/react-dom/cjs/react-dom.development
                                         </StackTraceHeader>
                                         <StackTraceFrames />
                                     </StackTrace>
+                                </ComponentCard>
+                            )}
+
+                            {/* Image Zoom */}
+                            {filteredSections.find((s) => s.id === "ai-image-zoom") && (
+                                <ComponentCard title="Image Zoom" id="ai-image-zoom">
+                                    <div className="space-y-4">
+                                        <p className="text-sm text-muted-foreground">Click the image to zoom in. Click again or press Escape to close.</p>
+                                        <ImageZoom>
+                                            <img
+                                                src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&h=900&fit=crop"
+                                                alt="Code on a laptop screen"
+                                                className="rounded-lg w-full max-w-md"
+                                            />
+                                        </ImageZoom>
+                                    </div>
+                                </ComponentCard>
+                            )}
+
+                            {/* Editor */}
+                            {filteredSections.find((s) => s.id === "ai-editor") && (
+                                <ComponentCard title="Editor" id="ai-editor">
+                                    <div className="space-y-4">
+                                        <p className="text-sm text-muted-foreground">A rich text editor with slash commands. Type / to open the command menu. Select text to see formatting options.</p>
+                                        <EditorProvider
+                                            className="min-h-[200px] rounded-lg border p-4"
+                                            placeholder="Start typing... Use / for commands"
+                                        >
+                                            <EditorBubbleMenu>
+                                                <EditorFormatBold />
+                                                <EditorFormatItalic />
+                                                <EditorFormatStrike />
+                                                <EditorFormatUnderline />
+                                            </EditorBubbleMenu>
+                                        </EditorProvider>
+                                    </div>
+                                </ComponentCard>
+                            )}
+
+                            {/* Color Picker */}
+                            {filteredSections.find((s) => s.id === "ai-color-picker") && (
+                                <ComponentCard title="Color Picker" id="ai-color-picker">
+                                    <div className="space-y-4">
+                                        <p className="text-sm text-muted-foreground">A full-featured color picker with hue, saturation, alpha controls and multiple output formats.</p>
+                                        <ColorPicker defaultValue="#6366f1" className="w-full max-w-xs">
+                                            <ColorPickerSelection className="h-40 rounded-lg" />
+                                            <ColorPickerHue />
+                                            <ColorPickerAlpha />
+                                            <div className="flex items-center gap-2">
+                                                <ColorPickerEyeDropper />
+                                                <ColorPickerOutput />
+                                                <ColorPickerFormat />
+                                            </div>
+                                        </ColorPicker>
+                                    </div>
+                                </ComponentCard>
+                            )}
+
+                            {/* Image Crop */}
+                            {filteredSections.find((s) => s.id === "ai-image-crop") && (
+                                <ComponentCard title="Image Crop" id="ai-image-crop">
+                                    <div className="space-y-4">
+                                        <p className="text-sm text-muted-foreground">Upload an image to crop it. Drag the crop area to adjust, then use the buttons to apply or reset.</p>
+                                        <ImageCropDemo />
+                                    </div>
+                                </ComponentCard>
+                            )}
+
+                            {/* Kanban */}
+                            {filteredSections.find((s) => s.id === "ai-kanban") && (
+                                <ComponentCard title="Kanban" id="ai-kanban">
+                                    <div className="space-y-4">
+                                        <p className="text-sm text-muted-foreground">A drag-and-drop Kanban board. Drag cards between columns to reorganize.</p>
+                                        <KanbanDemo />
+                                    </div>
+                                </ComponentCard>
+                            )}
+
+                            {/* Gantt */}
+                            {filteredSections.find((s) => s.id === "ai-gantt") && (
+                                <ComponentCard title="Gantt" id="ai-gantt">
+                                    <div className="space-y-4">
+                                        <p className="text-sm text-muted-foreground">A project timeline Gantt chart with draggable feature bars and today marker.</p>
+                                        <GanttDemo />
+                                    </div>
+                                </ComponentCard>
+                            )}
+
+                            {/* Marquee */}
+                            {filteredSections.find((s) => s.id === "ai-marquee") && (
+                                <ComponentCard title="Marquee" id="ai-marquee">
+                                    <div className="space-y-4">
+                                        <p className="text-sm text-muted-foreground">An auto-scrolling marquee that pauses on hover. Perfect for logos, testimonials, or announcements.</p>
+                                        <Marquee>
+                                            <MarqueeFade side="left" />
+                                            <MarqueeContent speed={30}>
+                                                {["React", "Next.js", "TypeScript", "Tailwind", "Shadcn", "Kibo UI"].map((tech) => (
+                                                    <MarqueeItem key={tech}>
+                                                        <div className="flex items-center justify-center rounded-lg border bg-muted px-4 py-2">
+                                                            <span className="font-medium">{tech}</span>
+                                                        </div>
+                                                    </MarqueeItem>
+                                                ))}
+                                            </MarqueeContent>
+                                            <MarqueeFade side="right" />
+                                        </Marquee>
+                                    </div>
+                                </ComponentCard>
+                            )}
+
+                            {/* QR Code */}
+                            {filteredSections.find((s) => s.id === "ai-qr-code") && (
+                                <ComponentCard title="QR Code" id="ai-qr-code">
+                                    <div className="space-y-4">
+                                        <p className="text-sm text-muted-foreground">A dynamically generated QR code that respects your theme colors.</p>
+                                        <div className="flex items-center gap-6">
+                                            <div className="w-32 h-32">
+                                                <QRCode data="https://theplaiground.co" />
+                                            </div>
+                                            <div className="text-sm">
+                                                <p className="font-medium">Scan to visit</p>
+                                                <p className="text-muted-foreground">theplaiground.co</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ComponentCard>
+                            )}
+
+                            {/* Source (from Prompt Kit) */}
+                            {filteredSections.find((s) => s.id === "ai-source") && (
+                                <ComponentCard title="Source" id="ai-source">
+                                    <div className="space-y-4">
+                                        <p className="text-sm text-muted-foreground">A hoverable link component that shows a preview card with the source's title and description.</p>
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-sm">Check out</span>
+                                            <PromptKitSource href="https://theplaiground.co">
+                                                <PromptKitSourceTrigger showFavicon />
+                                                <PromptKitSourceContent
+                                                    title="The Plaiground"
+                                                    description="A creative playground for building and exploring AI-powered experiences."
+                                                />
+                                            </PromptKitSource>
+                                            <span className="text-sm">for more!</span>
+                                        </div>
+                                    </div>
+                                </ComponentCard>
+                            )}
+
+                            {/* RANT VOICE COMPONENTS */}
+
+                            {/* Live Waveform */}
+                            {filteredSections.find((s) => s.id === "voice-live-waveform") && (
+                                <ComponentCard title="Live Waveform" id="voice-live-waveform">
+                                    <div className="space-y-4">
+                                        <p className="text-sm text-muted-foreground">A real-time audio waveform visualizer that responds to microphone input.</p>
+                                        <div className="flex items-center gap-4">
+                                            <div className="h-16 w-48 rounded-lg border bg-muted/50 p-2">
+                                                <LiveWaveform active={false} height={48} barWidth={3} barGap={1} mode="static" />
+                                            </div>
+                                            <p className="text-xs text-muted-foreground">Click to activate microphone</p>
+                                        </div>
+                                    </div>
+                                </ComponentCard>
+                            )}
+
+                            {/* Voice Button */}
+                            {filteredSections.find((s) => s.id === "voice-voice-button") && (
+                                <ComponentCard title="Voice Button" id="voice-voice-button">
+                                    <div className="space-y-4">
+                                        <p className="text-sm text-muted-foreground">A button with built-in waveform visualization for voice input states.</p>
+                                        <div className="flex flex-wrap items-center gap-3">
+                                            <VoiceButton state="idle" label="Idle" trailing="⌥Space" />
+                                            <VoiceButton state="recording" label="Recording" />
+                                            <VoiceButton state="processing" label="Processing" />
+                                            <VoiceButton state="success" label="Success" />
+                                        </div>
+                                    </div>
+                                </ComponentCard>
+                            )}
+
+                            {/* Mic Selector */}
+                            {filteredSections.find((s) => s.id === "voice-mic-selector") && (
+                                <ComponentCard title="Mic Selector" id="voice-mic-selector">
+                                    <div className="space-y-4">
+                                        <p className="text-sm text-muted-foreground">A dropdown for selecting and testing microphone devices with live preview.</p>
+                                        <div className="flex items-center gap-4">
+                                            <MicSelector />
+                                        </div>
+                                    </div>
+                                </ComponentCard>
+                            )}
+
+                            {/* Orb */}
+                            {filteredSections.find((s) => s.id === "voice-orb") && (
+                                <ComponentCard title="Orb" id="voice-orb">
+                                    <div className="space-y-4">
+                                        <p className="text-sm text-muted-foreground">An animated orb visualization for AI voice interactions.</p>
+                                        <div className="flex items-center justify-center gap-6">
+                                            <div className="flex flex-col items-center gap-2">
+                                                <Orb size={80} state="idle" />
+                                                <span className="text-xs text-muted-foreground">Idle</span>
+                                            </div>
+                                            <div className="flex flex-col items-center gap-2">
+                                                <Orb size={80} state="listening" />
+                                                <span className="text-xs text-muted-foreground">Listening</span>
+                                            </div>
+                                            <div className="flex flex-col items-center gap-2">
+                                                <Orb size={80} state="thinking" />
+                                                <span className="text-xs text-muted-foreground">Thinking</span>
+                                            </div>
+                                            <div className="flex flex-col items-center gap-2">
+                                                <Orb size={80} state="speaking" />
+                                                <span className="text-xs text-muted-foreground">Speaking</span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </ComponentCard>
                             )}
 
