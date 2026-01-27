@@ -28,6 +28,7 @@
     "@streamdown/code": "^1.0.1",
     "@streamdown/math": "^1.0.1",
     "@streamdown/mermaid": "^1.0.1",
+    "@tabler/icons-react": "^3.36.1",
     "@tanstack/react-table": "^8.21.3",
     "@tiptap/core": "^3.17.1",
     "@tiptap/extension-code-block-lowlight": "^3.17.1",

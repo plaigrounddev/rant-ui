@@ -108,7 +108,12 @@ import { LiveWaveform } from "@/components/ui/live-waveform";
 import { VoiceButton } from "@/components/ui/voice-button";
 import { MicSelector } from "@/components/ui/mic-selector";
 import { Orb } from "@/components/ui/orb";
-import { CopyIcon, ThumbsUpIcon, ThumbsDownIcon, RefreshCwIcon, SearchIcon, GlobeIcon, CheckIcon, DownloadIcon, ExternalLinkIcon, ArrowLeftIcon, ArrowRightIcon, RotateCwIcon, MicIcon } from "lucide-react";
+import { NoiseBackground } from "@/components/ui/noise-background";
+import { FloatingDock } from "@/components/ui/floating-dock";
+import { Spotlight, SpotLightItem, SpotlightCard } from "@/components/ui/spotlight";
+import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
+import { BlurVignette, BlurVignetteArticle } from "@/components/ui/blur-vignette";
+import { CopyIcon, ThumbsUpIcon, ThumbsDownIcon, RefreshCwIcon, SearchIcon, GlobeIcon, CheckIcon, DownloadIcon, ExternalLinkIcon, ArrowLeftIcon, ArrowRightIcon, RotateCwIcon, MicIcon, HomeIcon, MessageSquareIcon, SettingsIcon, UserIcon, BellIcon } from "lucide-react";
 
 // Categories
 const categories = [
@@ -163,6 +168,12 @@ const componentSections = [
     { id: "ai-marquee", name: "Marquee", category: "ai-elements" },
     { id: "ai-qr-code", name: "QR Code", category: "ai-elements" },
     { id: "ai-source", name: "Source", category: "ai-elements" },
+    { id: "ai-noise-background", name: "Noise Background", category: "ai-elements" },
+    { id: "ai-floating-dock", name: "Floating Dock", category: "ai-elements" },
+    { id: "ai-spotlight", name: "Spotlight", category: "ai-elements" },
+    { id: "ai-hover-border-gradient", name: "Hover Border Gradient", category: "ai-elements" },
+    { id: "ai-spotlight-cards", name: "Spotlight Cards", category: "ai-elements" },
+    { id: "ai-blur-vignette", name: "Blur Vignette", category: "ai-elements" },
     // Rant Voice Components
     { id: "voice-live-waveform", name: "Live Waveform", category: "rant-voice" },
     { id: "voice-voice-button", name: "Voice Button", category: "rant-voice" },
@@ -1026,6 +1037,208 @@ at mountIndeterminateComponent (node_modules/react-dom/cjs/react-dom.development
                                                 />
                                             </PromptKitSource>
                                             <span className="text-sm">for more!</span>
+                                        </div>
+                                    </div>
+                                </ComponentCard>
+                            )}
+
+                            {/* Noise Background */}
+                            {filteredSections.find((s) => s.id === "ai-noise-background") && (
+                                <ComponentCard title="Noise Background" id="ai-noise-background">
+                                    <div className="space-y-6">
+                                        <p className="text-sm text-muted-foreground">An animated noise texture background with moving gradients. Perfect for buttons, cards, or any area that needs visual interest.</p>
+
+                                        {/* Button Example */}
+                                        <div className="space-y-2">
+                                            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Button</p>
+                                            <div className="flex justify-center">
+                                                <NoiseBackground
+                                                    containerClassName="w-fit p-2 rounded-full mx-auto"
+                                                    gradientColors={[
+                                                        "rgb(255, 100, 150)",
+                                                        "rgb(100, 150, 255)",
+                                                        "rgb(255, 200, 100)",
+                                                    ]}
+                                                >
+                                                    <button className="h-full w-full cursor-pointer rounded-full bg-gradient-to-r from-neutral-100 via-neutral-100 to-white px-4 py-2 text-black shadow-[0px_2px_0px_0px_var(--color-neutral-50)_inset,0px_0.5px_1px_0px_var(--color-neutral-400)] transition-all duration-100 active:scale-95 dark:from-black dark:via-black dark:to-neutral-900 dark:text-white dark:shadow-[0px_1px_0px_0px_var(--color-neutral-950)_inset,0px_1px_0px_0px_var(--color-neutral-800)]">
+                                                        Start publishing &rarr;
+                                                    </button>
+                                                </NoiseBackground>
+                                            </div>
+                                        </div>
+
+                                        {/* Bento Card Example */}
+                                        <div className="space-y-2">
+                                            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Bento Card</p>
+                                            <div className="mx-auto max-w-sm">
+                                                <NoiseBackground
+                                                    gradientColors={[
+                                                        "rgb(255, 100, 150)",
+                                                        "rgb(100, 150, 255)",
+                                                        "rgb(255, 200, 100)",
+                                                    ]}
+                                                >
+                                                    <div className="flex h-full min-h-80 flex-col overflow-hidden rounded-lg bg-white text-center dark:bg-neutral-800">
+                                                        <img
+                                                            src="https://assets.aceternity.com/blog/how-to-create-a-bento-grid.png"
+                                                            alt="Bento Grid Tutorial"
+                                                            className="h-60 w-full rounded-lg object-cover"
+                                                        />
+                                                        <div className="px-4 py-2">
+                                                            <h3 className="text-left text-lg font-semibold text-balance text-neutral-800 dark:text-neutral-200">
+                                                                How to create a bento grid with Tailwind
+                                                            </h3>
+                                                            <p className="mt-2 text-left text-sm text-neutral-600 dark:text-neutral-400">
+                                                                Learn how to create a bento grid with Tailwind CSS, Next.js and Framer Motion.
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </NoiseBackground>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ComponentCard>
+                            )}
+
+                            {/* Floating Dock */}
+                            {filteredSections.find((s) => s.id === "ai-floating-dock") && (
+                                <ComponentCard title="Floating Dock" id="ai-floating-dock">
+                                    <div className="space-y-4">
+                                        <p className="text-sm text-muted-foreground">A macOS-style dock with smooth hover magnification animations. Icons scale up as you hover over them.</p>
+                                        <div className="flex items-center justify-center py-8">
+                                            <FloatingDock
+                                                items={[
+                                                    { title: "Home", icon: <HomeIcon className="h-full w-full text-neutral-500 dark:text-neutral-400" />, href: "#" },
+                                                    { title: "Messages", icon: <MessageSquareIcon className="h-full w-full text-neutral-500 dark:text-neutral-400" />, href: "#" },
+                                                    { title: "Notifications", icon: <BellIcon className="h-full w-full text-neutral-500 dark:text-neutral-400" />, href: "#" },
+                                                    { title: "Profile", icon: <UserIcon className="h-full w-full text-neutral-500 dark:text-neutral-400" />, href: "#" },
+                                                    { title: "Settings", icon: <SettingsIcon className="h-full w-full text-neutral-500 dark:text-neutral-400" />, href: "#" },
+                                                ]}
+                                            />
+                                        </div>
+                                    </div>
+                                </ComponentCard>
+                            )}
+
+                            {/* Spotlight */}
+                            {filteredSections.find((s) => s.id === "ai-spotlight") && (
+                                <ComponentCard title="Spotlight" id="ai-spotlight">
+                                    <div className="space-y-4">
+                                        <p className="text-sm text-muted-foreground">Interactive spotlight cards that track cursor movement. Cards light up based on proximity and hover state.</p>
+                                        <Spotlight className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <SpotLightItem className="p-4 rounded-lg">
+                                                <div className="relative z-10 bg-neutral-900 rounded-lg p-4">
+                                                    <h3 className="text-lg font-semibold text-white">Proximity Spotlight</h3>
+                                                    <p className="text-neutral-400 text-sm mt-2">Cards detect cursor proximity and illuminate accordingly.</p>
+                                                </div>
+                                            </SpotLightItem>
+                                            <SpotLightItem className="p-4 rounded-lg">
+                                                <div className="relative z-10 bg-neutral-900 rounded-lg p-4">
+                                                    <h3 className="text-lg font-semibold text-white">Cursor Flow Gradient</h3>
+                                                    <p className="text-neutral-400 text-sm mt-2">A subtle gradient follows your cursor movement.</p>
+                                                </div>
+                                            </SpotLightItem>
+                                        </Spotlight>
+                                    </div>
+                                </ComponentCard>
+                            )}
+
+                            {/* Hover Border Gradient */}
+                            {filteredSections.find((s) => s.id === "ai-hover-border-gradient") && (
+                                <ComponentCard title="Hover Border Gradient" id="ai-hover-border-gradient">
+                                    <div className="space-y-4">
+                                        <p className="text-sm text-muted-foreground">A button with an animated rotating gradient border that highlights on hover. Creates a sleek, modern call-to-action effect.</p>
+                                        <div className="flex flex-wrap items-center justify-center gap-4 py-4">
+                                            <HoverBorderGradient
+                                                containerClassName="rounded-full"
+                                                className="flex items-center gap-2 bg-black dark:bg-white dark:text-black text-white"
+                                            >
+                                                <span>Get Started</span>
+                                            </HoverBorderGradient>
+                                            <HoverBorderGradient
+                                                as="a"
+                                                containerClassName="rounded-full"
+                                                className="flex items-center gap-2 bg-black dark:bg-white dark:text-black text-white"
+                                            >
+                                                <span>Learn More →</span>
+                                            </HoverBorderGradient>
+                                        </div>
+                                    </div>
+                                </ComponentCard>
+                            )}
+
+                            {/* Spotlight Cards */}
+                            {filteredSections.find((s) => s.id === "ai-spotlight-cards") && (
+                                <ComponentCard title="Spotlight Cards" id="ai-spotlight-cards">
+                                    <div className="space-y-4">
+                                        <p className="text-sm text-muted-foreground">Elegant cards with a blur spotlight effect that follows cursor movement, creating a premium hover experience.</p>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 group">
+                                            <SpotlightCard>
+                                                <div className="relative h-full bg-slate-900 p-6 pb-8 rounded-3xl">
+                                                    <div className="flex items-center gap-3 mb-3">
+                                                        <div className="w-10 h-10 bg-indigo-500 rounded-full flex items-center justify-center">
+                                                            <GlobeIcon className="w-5 h-5 text-white" />
+                                                        </div>
+                                                        <h3 className="text-lg font-semibold text-slate-200">Global Reach</h3>
+                                                    </div>
+                                                    <p className="text-slate-400 text-sm">Deploy your applications worldwide with our edge network infrastructure.</p>
+                                                </div>
+                                            </SpotlightCard>
+                                            <SpotlightCard>
+                                                <div className="relative h-full bg-slate-900 p-6 pb-8 rounded-3xl">
+                                                    <div className="flex items-center gap-3 mb-3">
+                                                        <div className="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center">
+                                                            <CheckIcon className="w-5 h-5 text-white" />
+                                                        </div>
+                                                        <h3 className="text-lg font-semibold text-slate-200">Reliable</h3>
+                                                    </div>
+                                                    <p className="text-slate-400 text-sm">99.99% uptime guaranteed with automatic failover and redundancy.</p>
+                                                </div>
+                                            </SpotlightCard>
+                                        </div>
+                                    </div>
+                                </ComponentCard>
+                            )}
+
+                            {/* Blur Vignette */}
+                            {filteredSections.find((s) => s.id === "ai-blur-vignette") && (
+                                <ComponentCard title="Blur Vignette" id="ai-blur-vignette">
+                                    <div className="space-y-4">
+                                        <p className="text-sm text-muted-foreground">A customizable blur vignette effect for images and video cards. Creates soft, blurred edges that fade content elegantly.</p>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <BlurVignette
+                                                classname="w-full aspect-video"
+                                                radius="16px"
+                                                inset="30px"
+                                                transitionLength="60px"
+                                                blur="8px"
+                                            >
+                                                <img
+                                                    src="https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?w=600"
+                                                    alt="Mountain landscape"
+                                                    className="w-full h-full object-cover"
+                                                />
+                                                <BlurVignetteArticle classname="absolute inset-0" />
+                                            </BlurVignette>
+                                            <BlurVignette
+                                                classname="w-full aspect-video"
+                                                radius="16px"
+                                                inset="40px"
+                                                transitionLength="80px"
+                                                blur="12px"
+                                            >
+                                                <img
+                                                    src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=600"
+                                                    alt="Foggy mountains"
+                                                    className="w-full h-full object-cover"
+                                                />
+                                                <BlurVignetteArticle classname="absolute inset-0">
+                                                    <div className="absolute bottom-4 left-4 right-4 text-white">
+                                                        <h4 className="font-semibold">With Overlay Content</h4>
+                                                        <p className="text-sm text-white/80">Add text or other content</p>
+                                                    </div>
+                                                </BlurVignetteArticle>
+                                            </BlurVignette>
                                         </div>
                                     </div>
                                 </ComponentCard>
