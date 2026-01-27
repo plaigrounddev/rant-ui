@@ -1082,20 +1082,28 @@ at mountIndeterminateComponent (node_modules/react-dom/cjs/react-dom.development
                                         <p className="text-sm text-muted-foreground">An animated orb visualization for AI voice interactions.</p>
                                         <div className="flex items-center justify-center gap-6">
                                             <div className="flex flex-col items-center gap-2">
-                                                <Orb size={80} state="idle" />
+                                                <div className="h-20 w-20">
+                                                    <Orb agentState={null} />
+                                                </div>
                                                 <span className="text-xs text-muted-foreground">Idle</span>
                                             </div>
                                             <div className="flex flex-col items-center gap-2">
-                                                <Orb size={80} state="listening" />
+                                                <div className="h-20 w-20">
+                                                    <Orb agentState="listening" />
+                                                </div>
                                                 <span className="text-xs text-muted-foreground">Listening</span>
                                             </div>
                                             <div className="flex flex-col items-center gap-2">
-                                                <Orb size={80} state="thinking" />
+                                                <div className="h-20 w-20">
+                                                    <Orb agentState="thinking" />
+                                                </div>
                                                 <span className="text-xs text-muted-foreground">Thinking</span>
                                             </div>
                                             <div className="flex flex-col items-center gap-2">
-                                                <Orb size={80} state="speaking" />
-                                                <span className="text-xs text-muted-foreground">Speaking</span>
+                                                <div className="h-20 w-20">
+                                                    <Orb agentState="talking" />
+                                                </div>
+                                                <span className="text-xs text-muted-foreground">Talking</span>
                                             </div>
                                         </div>
                                     </div>
