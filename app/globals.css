@@ -2,6 +2,9 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+/* Required for Streamdown markdown rendering (mermaid, math, code blocks, etc.) */
+@source "../node_modules/streamdown/dist/*.js";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -188,6 +191,7 @@
     letter-spacing: var(--tracking-normal);
     @apply bg-background text-foreground;
   }
+
   * {
     @apply border-border outline-ring/50;
   }
