@@ -410,6 +410,25 @@ export default function ComponentsPage() {
                     {/* Main Content */}
                     <main className="flex-1 p-8">
                         <div className="max-w-4xl space-y-8">
+                            {/* FEATURED DEMOS */}
+                            <div className="mb-8">
+                                <h2 className="text-lg font-semibold mb-4">Featured Demos</h2>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <a href="/ai-chat-demo" className="group block rounded-lg border bg-card p-4 hover:border-primary transition-colors">
+                                        <h3 className="font-medium group-hover:text-primary transition-colors">AI Chat Demo</h3>
+                                        <p className="text-sm text-muted-foreground mt-1">Full chat interface showcasing AI Elements with messages, reasoning, sources, and model selector.</p>
+                                    </a>
+                                    <a href="/rant-coder" className="group block rounded-lg border bg-card p-4 hover:border-primary transition-colors">
+                                        <h3 className="font-medium group-hover:text-primary transition-colors">Rant Coder</h3>
+                                        <p className="text-sm text-muted-foreground mt-1">v0 clone demo with chat and live preview panel for code generation.</p>
+                                    </a>
+                                    <a href="/rant-profiler" className="group block rounded-lg border bg-card p-4 hover:border-primary transition-colors">
+                                        <h3 className="font-medium group-hover:text-primary transition-colors">Rant Profiler</h3>
+                                        <p className="text-sm text-muted-foreground mt-1">AI-enriched profile form with career insights, skill analysis, and suggestions.</p>
+                                    </a>
+                                </div>
+                            </div>
+
                             {/* AI ELEMENTS */}
 
                             {/* Message */}
@@ -1156,7 +1175,6 @@ at mountIndeterminateComponent (node_modules/react-dom/cjs/react-dom.development
                                                 <span>Get Started</span>
                                             </HoverBorderGradient>
                                             <HoverBorderGradient
-                                                as="a"
                                                 containerClassName="rounded-full"
                                                 className="flex items-center gap-2 bg-black dark:bg-white dark:text-black text-white"
                                             >

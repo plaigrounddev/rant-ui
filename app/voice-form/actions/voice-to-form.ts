@@ -46,7 +46,6 @@ export async function voiceToFormAction(audio: File) {
     const { object: extractedData } = await generateObject({
       model: "xai/grok-4-fast-non-reasoning",
       schema: extractionSchema,
-      mode: "json",
       system: `You are a form field extraction assistant. Extract ${fieldNames.join(" and ")} from the speech.
 
 CRITICAL RULES:
