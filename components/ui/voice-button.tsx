@@ -50,12 +50,12 @@ export interface VoiceButtonProps
    * @default "outline"
    */
   variant?:
-    | "default"
-    | "destructive"
-    | "outline"
-    | "secondary"
-    | "ghost"
-    | "link"
+  | "default"
+  | "destructive"
+  | "outline"
+  | "secondary"
+  | "ghost"
+  | "link"
 
   /**
    * Size of the button
@@ -150,7 +150,7 @@ export const VoiceButton = React.forwardRef<
         onClick={handleClick}
         disabled={isDisabled}
         className={cn(
-          "gap-2 transition-all duration-200",
+          "gap-2 transition-all duration-500 ease-out delay-100 hover:-translate-y-[2px]",
           size === "icon" && "relative",
           className
         )}

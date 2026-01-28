@@ -8,12 +8,7 @@ import {
 } from "@/components/ai-elements/conversation";
 import { Loader } from "@/components/ai-elements/loader";
 import { Message, MessageContent } from "@/components/ai-elements/message";
-import {
-  PromptInput,
-  type PromptInputMessage,
-  PromptInputSubmit,
-  PromptInputTextarea,
-} from "@/components/ai-elements/prompt-input";
+import { PromptBox } from "@/components/ui/chatgpt-prompt-input";
 
 import { Suggestion, Suggestions } from "@/components/ai-elements/suggestion";
 import {
@@ -51,13 +46,12 @@ export function Demo() {
   >([]);
 
   const handleSendMessage = async (
-    message: PromptInputMessage,
-    event: FormEvent<HTMLFormElement>
+    text: string,
+    image: string | null
   ) => {
-    event.preventDefault();
-    if (!message.text?.trim() || isLoading) return;
+    if (!text?.trim() || isLoading) return;
 
-    const userMessage = message.text.trim();
+    const userMessage = text.trim();
     setMessage("");
     setIsLoading(true);
 
@@ -299,18 +293,13 @@ export function Demo() {
               </Suggestions>
             </div>
           )}
-          <PromptInput className="relative w-full bg-background border border-border rounded-xl" onSubmit={handleSendMessage}>
-            <PromptInputTextarea
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="Ask v0 to build..."
-              value={message}
-            />
-            <PromptInputSubmit
-              className="absolute right-1.5 bottom-1.5 h-7 w-7"
-              disabled={!message.trim() || isLoading}
-              status={isLoading ? "streaming" : "ready"}
-            />
-          </PromptInput>
+          <PromptBox
+            className="w-full"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onSubmit={handleSendMessage}
+            loading={isLoading}
+          />
         </div>
       </div>
 

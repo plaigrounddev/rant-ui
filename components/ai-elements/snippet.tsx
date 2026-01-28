@@ -37,7 +37,7 @@ export const Snippet = ({
   ...props
 }: SnippetProps) => (
   <SnippetContext.Provider value={{ code }}>
-    <InputGroup className={cn("font-mono", className)} {...props}>
+    <InputGroup className={cn("font-mono w-full px-4", className)} {...props}>
       {children}
     </InputGroup>
   </SnippetContext.Provider>

@@ -64,7 +64,8 @@ import { Spinner } from "@/components/ui/spinner";
 
 // AI Elements
 import { Message, MessageContent, MessageActions, MessageAction, MessageResponse } from "@/components/ai-elements/message";
-import { PromptInput, PromptInputTextarea, PromptInputSubmit } from "@/components/ai-elements/prompt-input";
+import { PromptBox } from "@/components/ui/chatgpt-prompt-input";
+
 import { CodeBlock } from "@/components/ai-elements/code-block";
 import { Terminal } from "@/components/ai-elements/terminal";
 import { FileTree, FileTreeFolder, FileTreeFile } from "@/components/ai-elements/file-tree";
@@ -133,7 +134,7 @@ const categories = [
 const componentSections = [
     // AI Elements
     { id: "ai-message", name: "Message", category: "ai-elements" },
-    { id: "ai-prompt-input", name: "Prompt Input", category: "ai-elements" },
+    { id: "ai-prompt-box", name: "Prompt Box", category: "ai-elements" },
     { id: "ai-code-block", name: "Code Block", category: "ai-elements" },
     { id: "ai-terminal", name: "Terminal", category: "ai-elements" },
     { id: "ai-file-tree", name: "File Tree", category: "ai-elements" },
@@ -235,6 +236,7 @@ function ImageCropDemo() {
             <Input
                 type="file"
                 accept="image/*"
+                className="w-fit rounded-full px-4"
                 onChange={(e) => {
                     const f = e.target.files?.[0];
                     if (f) {
@@ -453,13 +455,12 @@ export default function ComponentsPage() {
                                 </ComponentCard>
                             )}
 
-                            {/* Prompt Input */}
-                            {filteredSections.find((s) => s.id === "ai-prompt-input") && (
-                                <ComponentCard title="Prompt Input" id="ai-prompt-input">
-                                    <PromptInput onSubmit={(msg) => console.log(msg)}>
-                                        <PromptInputTextarea placeholder="Ask me anything..." />
-                                        <PromptInputSubmit />
-                                    </PromptInput>
+                            {/* Prompt Box */}
+                            {filteredSections.find((s) => s.id === "ai-prompt-box") && (
+                                <ComponentCard title="Prompt Box" id="ai-prompt-box">
+                                    <div className="max-w-3xl mx-auto">
+                                        <PromptBox />
+                                    </div>
                                 </ComponentCard>
                             )}
 
@@ -1170,13 +1171,13 @@ at mountIndeterminateComponent (node_modules/react-dom/cjs/react-dom.development
                                         <div className="flex flex-wrap items-center justify-center gap-4 py-4">
                                             <HoverBorderGradient
                                                 containerClassName="rounded-full"
-                                                className="flex items-center gap-2 bg-black dark:bg-white dark:text-black text-white"
+                                                className="flex items-center gap-2 bg-background text-foreground"
                                             >
                                                 <span>Get Started</span>
                                             </HoverBorderGradient>
                                             <HoverBorderGradient
                                                 containerClassName="rounded-full"
-                                                className="flex items-center gap-2 bg-black dark:bg-white dark:text-black text-white"
+                                                className="flex items-center gap-2 bg-background text-foreground"
                                             >
                                                 <span>Learn More →</span>
                                             </HoverBorderGradient>
@@ -1192,25 +1193,25 @@ at mountIndeterminateComponent (node_modules/react-dom/cjs/react-dom.development
                                         <p className="text-sm text-muted-foreground">Elegant cards with a blur spotlight effect that follows cursor movement, creating a premium hover experience.</p>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 group">
                                             <SpotlightCard>
-                                                <div className="relative h-full bg-slate-900 p-6 pb-8 rounded-3xl">
+                                                <div className="relative h-full bg-card p-6 pb-8 rounded-3xl border">
                                                     <div className="flex items-center gap-3 mb-3">
-                                                        <div className="w-10 h-10 bg-indigo-500 rounded-full flex items-center justify-center">
-                                                            <GlobeIcon className="w-5 h-5 text-white" />
+                                                        <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
+                                                            <GlobeIcon className="w-5 h-5 text-primary" />
                                                         </div>
-                                                        <h3 className="text-lg font-semibold text-slate-200">Global Reach</h3>
+                                                        <h3 className="text-lg font-semibold text-foreground">Global Reach</h3>
                                                     </div>
-                                                    <p className="text-slate-400 text-sm">Deploy your applications worldwide with our edge network infrastructure.</p>
+                                                    <p className="text-muted-foreground text-sm">Deploy your applications worldwide with our edge network infrastructure.</p>
                                                 </div>
                                             </SpotlightCard>
                                             <SpotlightCard>
-                                                <div className="relative h-full bg-slate-900 p-6 pb-8 rounded-3xl">
+                                                <div className="relative h-full bg-card p-6 pb-8 rounded-3xl border">
                                                     <div className="flex items-center gap-3 mb-3">
-                                                        <div className="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center">
-                                                            <CheckIcon className="w-5 h-5 text-white" />
+                                                        <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
+                                                            <CheckIcon className="w-5 h-5 text-primary" />
                                                         </div>
-                                                        <h3 className="text-lg font-semibold text-slate-200">Reliable</h3>
+                                                        <h3 className="text-lg font-semibold text-foreground">Reliable</h3>
                                                     </div>
-                                                    <p className="text-slate-400 text-sm">99.99% uptime guaranteed with automatic failover and redundancy.</p>
+                                                    <p className="text-muted-foreground text-sm">99.99% uptime guaranteed with automatic failover and redundancy.</p>
                                                 </div>
                                             </SpotlightCard>
                                         </div>
@@ -1231,12 +1232,14 @@ at mountIndeterminateComponent (node_modules/react-dom/cjs/react-dom.development
                                                 transitionLength="60px"
                                                 blur="8px"
                                             >
-                                                <img
-                                                    src="https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?w=600"
-                                                    alt="Mountain landscape"
-                                                    className="w-full h-full object-cover"
-                                                />
-                                                <BlurVignetteArticle classname="absolute inset-0" />
+                                                <ImageZoom>
+                                                    <img
+                                                        src="https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?w=600"
+                                                        alt="Mountain landscape"
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                </ImageZoom>
+                                                <BlurVignetteArticle classname="absolute inset-0 pointer-events-none" />
                                             </BlurVignette>
                                             <BlurVignette
                                                 classname="w-full aspect-video"
@@ -1245,13 +1248,15 @@ at mountIndeterminateComponent (node_modules/react-dom/cjs/react-dom.development
                                                 transitionLength="80px"
                                                 blur="12px"
                                             >
-                                                <img
-                                                    src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=600"
-                                                    alt="Foggy mountains"
-                                                    className="w-full h-full object-cover"
-                                                />
-                                                <BlurVignetteArticle classname="absolute inset-0">
-                                                    <div className="absolute bottom-4 left-4 right-4 text-white">
+                                                <ImageZoom>
+                                                    <img
+                                                        src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=600"
+                                                        alt="Foggy mountains"
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                </ImageZoom>
+                                                <BlurVignetteArticle classname="absolute inset-0 pointer-events-none">
+                                                    <div className="absolute bottom-4 left-4 right-4 text-white pointer-events-auto">
                                                         <h4 className="font-semibold">With Overlay Content</h4>
                                                         <p className="text-sm text-white/80">Add text or other content</p>
                                                     </div>

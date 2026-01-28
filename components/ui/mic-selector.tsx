@@ -65,9 +65,9 @@ export function MicSelector({
 
   const currentDevice = devices.find((d) => d.deviceId === selectedDevice) ||
     devices[0] || {
-      label: loading ? "Loading..." : "No microphone",
-      deviceId: "",
-    }
+    label: loading ? "Loading..." : "No microphone",
+    deviceId: "",
+  }
 
   const handleDeviceSelect = (deviceId: string, e?: React.MouseEvent) => {
     e?.preventDefault()
@@ -155,7 +155,7 @@ export function MicSelector({
                 )}
                 <span className="text-sm">{isMuted ? "Unmute" : "Mute"}</span>
               </Button>
-              <div className="bg-accent ml-auto w-16 overflow-hidden rounded-md p-1.5">
+              <div className="bg-muted text-primary ml-auto w-16 overflow-hidden rounded-md p-1.5">
                 <LiveWaveform
                   active={isPreviewActive}
                   deviceId={selectedDevice || defaultDeviceId}

@@ -35,22 +35,7 @@ import {
     ModelSelectorName,
     ModelSelectorTrigger,
 } from "@/components/ai-elements/model-selector";
-import {
-    PromptInput,
-    PromptInputActionAddAttachments,
-    PromptInputActionMenu,
-    PromptInputActionMenuContent,
-    PromptInputActionMenuTrigger,
-    PromptInputBody,
-    PromptInputButton,
-    PromptInputFooter,
-    PromptInputHeader,
-    type PromptInputMessage,
-    PromptInputSubmit,
-    PromptInputTextarea,
-    PromptInputTools,
-    usePromptInputAttachments,
-} from "@/components/ai-elements/prompt-input";
+import { PromptBox } from "@/components/ui/chatgpt-prompt-input";
 import {
     Reasoning,
     ReasoningContent,
@@ -333,28 +318,7 @@ const mockResponses = [
     "That's definitely worth exploring. From what I can see, the best way to handle this is to consider both the theoretical aspects and practical implementation details.",
 ];
 
-const PromptInputAttachmentsDisplay = () => {
-    const attachments = usePromptInputAttachments();
 
-    if (attachments.files.length === 0) {
-        return null;
-    }
-
-    return (
-        <Attachments variant="inline">
-            {attachments.files.map((attachment) => (
-                <Attachment
-                    data={attachment}
-                    key={attachment.id}
-                    onRemove={() => attachments.remove(attachment.id)}
-                >
-                    <AttachmentPreview />
-                    <AttachmentRemove />
-                </Attachment>
-            ))}
-        </Attachments>
-    );
-};
 
 export function AIChatDemo() {
     const [model, setModel] = useState<string>(models[0].id);
@@ -446,9 +410,9 @@ export function AIChatDemo() {
         [streamResponse]
     );
 
-    const handleSubmit = (message: PromptInputMessage) => {
-        const hasText = Boolean(message.text);
-        const hasAttachments = Boolean(message.files?.length);
+    const handlePromptBoxSubmit = (value: string, image: string | null) => {
+        const hasText = Boolean(value.trim());
+        const hasAttachments = Boolean(image);
 
         if (!(hasText || hasAttachments)) {
             return;
@@ -456,14 +420,14 @@ export function AIChatDemo() {
 
         setStatus("submitted");
 
-        if (message.files?.length) {
-            toast.success("Files attached", {
-                description: `${message.files.length} file(s) attached to message`,
+        if (image) {
+            toast.success("Image attached", {
+                description: "Image attached to message",
             });
         }
 
-        addUserMessage(message.text || "Sent with attachments");
-        setText("");
+        addUserMessage(value || "Sent with image");
+        // PromptBox clears itself
     };
 
     const handleSuggestionClick = (suggestion: string) => {
@@ -536,102 +500,9 @@ export function AIChatDemo() {
                     ))}
                 </Suggestions>
                 <div className="w-full px-4 pb-4">
-                    <PromptInput globalDrop multiple onSubmit={handleSubmit}>
-                        <PromptInputHeader>
-                            <PromptInputAttachmentsDisplay />
-                        </PromptInputHeader>
-                        <PromptInputBody>
-                            <PromptInputTextarea
-                                onChange={(event) => setText(event.target.value)}
-                                value={text}
-                            />
-                        </PromptInputBody>
-                        <PromptInputFooter>
-                            <PromptInputTools>
-                                <PromptInputActionMenu>
-                                    <PromptInputActionMenuTrigger />
-                                    <PromptInputActionMenuContent>
-                                        <PromptInputActionAddAttachments />
-                                    </PromptInputActionMenuContent>
-                                </PromptInputActionMenu>
-                                <PromptInputButton
-                                    onClick={() => setUseMicrophone(!useMicrophone)}
-                                    variant={useMicrophone ? "default" : "ghost"}
-                                >
-                                    <MicIcon size={16} />
-                                    <span className="sr-only">Microphone</span>
-                                </PromptInputButton>
-                                <PromptInputButton
-                                    onClick={() => setUseWebSearch(!useWebSearch)}
-                                    variant={useWebSearch ? "default" : "ghost"}
-                                >
-                                    <GlobeIcon size={16} />
-                                    <span>Search</span>
-                                </PromptInputButton>
-                                <ModelSelector
-                                    onOpenChange={setModelSelectorOpen}
-                                    open={modelSelectorOpen}
-                                >
-                                    <ModelSelectorTrigger asChild>
-                                        <PromptInputButton>
-                                            {selectedModelData?.chefSlug && (
-                                                <ModelSelectorLogo
-                                                    provider={selectedModelData.chefSlug}
-                                                />
-                                            )}
-                                            {selectedModelData?.name && (
-                                                <ModelSelectorName>
-                                                    {selectedModelData.name}
-                                                </ModelSelectorName>
-                                            )}
-                                        </PromptInputButton>
-                                    </ModelSelectorTrigger>
-                                    <ModelSelectorContent>
-                                        <ModelSelectorInput placeholder="Search models..." />
-                                        <ModelSelectorList>
-                                            <ModelSelectorEmpty>No models found.</ModelSelectorEmpty>
-                                            {["OpenAI", "Anthropic", "Google"].map((chef) => (
-                                                <ModelSelectorGroup heading={chef} key={chef}>
-                                                    {models
-                                                        .filter((m) => m.chef === chef)
-                                                        .map((m) => (
-                                                            <ModelSelectorItem
-                                                                key={m.id}
-                                                                onSelect={() => {
-                                                                    setModel(m.id);
-                                                                    setModelSelectorOpen(false);
-                                                                }}
-                                                                value={m.id}
-                                                            >
-                                                                <ModelSelectorLogo provider={m.chefSlug} />
-                                                                <ModelSelectorName>{m.name}</ModelSelectorName>
-                                                                <ModelSelectorLogoGroup>
-                                                                    {m.providers.map((provider) => (
-                                                                        <ModelSelectorLogo
-                                                                            key={provider}
-                                                                            provider={provider}
-                                                                        />
-                                                                    ))}
-                                                                </ModelSelectorLogoGroup>
-                                                                {model === m.id ? (
-                                                                    <CheckIcon className="ml-auto size-4" />
-                                                                ) : (
-                                                                    <div className="ml-auto size-4" />
-                                                                )}
-                                                            </ModelSelectorItem>
-                                                        ))}
-                                                </ModelSelectorGroup>
-                                            ))}
-                                        </ModelSelectorList>
-                                    </ModelSelectorContent>
-                                </ModelSelector>
-                            </PromptInputTools>
-                            <PromptInputSubmit
-                                disabled={!(text.trim() || status) || status === "streaming"}
-                                status={status}
-                            />
-                        </PromptInputFooter>
-                    </PromptInput>
+                    <div className="max-w-3xl mx-auto w-full">
+                        <PromptBox onSubmit={handlePromptBoxSubmit} loading={status === "streaming"} />
+                    </div>
                 </div>
             </div>
         </div>
